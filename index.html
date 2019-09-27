@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Token Recycle</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script src='js/bitboxsdk.js'></script>
+    <script src='js/slpjs.js'></script>
+    <script src='js/tokenrecycler.js'></script>
+
+    <!--[if lte IE 9]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
+    <h1>Token Recycle</h1>
+    <br />
+
+    <!--Private Key:<br /><input size="100" id="privatekey" /><br />
+    OR-->
+    (Read Only Mode) Public Key:<br /><input size="100" value="19RyV6XQEww5td2LPWDpK8o5V8at7Vpwgv" id="publickey" />
+    <button onclick="lookupTokens();">Lookup SLP Tokens</button>
+    <div id="checkboxes"></div>
+</body>
+
+</html>
