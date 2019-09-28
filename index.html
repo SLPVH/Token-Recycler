@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Token Recycle</title>
+    <title>Token Recycler</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -17,14 +17,26 @@
     <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
-    <h1>Token Recycle</h1>
+    <h1>Token Recycler</h1>
     <br />
+        There are no seatbelts or safety checks on this yet.<br/><br/>
 
+        This is in an alpha state and really may not work correctly, or at all, or to your severe disadvantage.<br/>
+        Don't enter your private key under any circumstance or you may lose all your tokens and all your BCH too.<br/>
+        <br/>
+        <br/>
     <!--Private Key:<br /><input size="100" id="privatekey" /><br />
     OR-->
-    (Read Only Mode) Public Key:<br /><input size="100" value="19RyV6XQEww5td2LPWDpK8o5V8at7Vpwgv" id="publickey" />
+    Public Key: (Begins with q or 1 or 3)<br />
+    <input size="100" value="qpw85glpf2qkv6lve52xkpekw2jq0pdcuyxzx87rzz" id="publickey" />
     <button id="lookup" onclick="lookupTokens();">Lookup SLP Tokens</button>
     <div id="checkboxes"></div>
+
+    <div id="private" style="display:none">
+        WIF Compressed Private Key: (Begins with L or K)<br />
+        <input size="100" value="" id="privatekey" />
+        <button id="recycle" onclick="recycle();" disabled>Recycle Checked Tokens</button>
+    </div>
 </body>
 
 </html>
