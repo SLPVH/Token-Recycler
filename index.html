@@ -19,15 +19,25 @@
         <![endif]-->
     <h1>Token Recycler</h1>
     <br />
-        There are no seatbelts or safety checks on this yet.<br/><br/>
-
-        This is in an alpha state and really may not work correctly, or at all, or to your severe disadvantage.<br/>
-        Don't enter your private key under any circumstance or you may lose all your tokens and all your BCH too.<br/>
+        <b>This tool is in beta. It may not be safe to use and is recommended for advanced users only.</b>
+        <br/>
+        <br/>
+        This tool allows you to recycle the BCH utxos and funds that are used to store unwanted tokens.
+        <br/>
+        <br/>
+        There are a variety of reasons you may wish to recycle tokens. You may wish to remove them from your Member account to speed up transactions, or from your Memo account to declutter your profile and interface.
+        <br/>
+        <br/>
+        This tool will destroy unwanted tokens, so be careful with its use. There is no way to recover tokens once recycled, and the amount of BCH gained from recyling is relatively small.
+        <br/>
+        <br/>
+        <b>USE OF THIS TOOL IS ENTIRELY AT YOUR OWN RISK.</b>
+        <br/>
         <br/>
         <br/>
     <!--Private Key:<br /><input size="100" id="privatekey" /><br />
     OR-->
-    Public Key: (Begins with q or 1 or 3)<br />
+    Public Key: (Begins with 'simpleledger' or 'q' or '1' or '3')<br />
     <input size="100" value="qpw85glpf2qkv6lve52xkpekw2jq0pdcuyxzx87rzz" id="publickey" />
     <button id="lookup" onclick="lookupTokens();">Lookup SLP Tokens</button>
     <div id="checkboxes"></div>
@@ -35,8 +45,11 @@
     <div id="private" style="display:none">
         WIF Compressed Private Key: (Begins with L or K)<br />
         <input size="100" value="" id="privatekey" />
-        <button id="recycle" onclick="recycle();" disabled>Recycle Checked Tokens</button>
+        <button id="recycle" onclick="recycle();">Recycle Checked Tokens</button>
     </div>
+    <br/><br/>
+    <div id="successtrxid"></div>
+    <br/><br/>
 </body>
 
 </html>

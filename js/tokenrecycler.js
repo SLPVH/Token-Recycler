@@ -2,46 +2,61 @@ const BITBOX = new bitboxSdk.BITBOX({ restURL: 'https://rest.bitcoin.com/v2/' })
 const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX);
 
 function lookupTokens() {
+  document.getElementById("checkboxes").innerHTML = "";
   document.getElementById("lookup").disabled = true;
+  document.getElementById("publickey").disabled = true;
   document.getElementById("lookup").innerHTML = "Loading";
+  document.getElementById("private").style.display = "none";
+  
 
-
-  let addr = document.getElementById("publickey").value;
+  let addr = document.getElementById("publickey").value.trim();
 
   let balances;
 
   //TODO validate all input coming from BitBox server to ensure it has not been compromised to send malicious code
   (async function () {
-    balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(addr);
+    try {
+      balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(addr);
+    } catch (err) {
+      alert("Oops. Error. You sure you got a valid public key? " + err);
+      document.getElementById("lookup").disabled = false;
+      document.getElementById("publickey").disabled = false;
+      document.getElementById("lookup").innerHTML = "Lookup SLP Tokens";
+      return;
+    }
+
     document.getElementById("lookup").innerHTML = "Finished lookup";
     let slputxos = balances.slpTokenUtxos;
     let utxoCheckboxes = "<form>";
 
     for (var key in slputxos) {
-      document.getElementById("lookup").innerHTML = "Lookup " + key;
+      let keysafe=sanitizeAlphanumeric(key);
+      document.getElementById("lookup").innerHTML = "Lookup " + keysafe;
 
-      //console.log(slputxos[key]);
-      const tokenInfo = await bitboxNetwork.getTokenInformation(key);
-      let slps = slputxos[key];
-      utxoCheckboxes = utxoCheckboxes + 
-      "<br/><a target='tokeninfo' href='" + tokenInfo.documentUri + "'>" + tokenInfo.name + "</a> <a target='memotokeninfo' href='https://memo.cash/token/"+key+"?sales'>Recent Sales On Memo</a><br/>";
-      
-      for (let i = 0; i < slps.length; i++) {
-        //utxoCheckboxes = utxoCheckboxes + tokenInfo.name + " " + slps[i].satoshis + " " + slps[i].txid + " " + slps[i].vout + " " + slps[i].satoshis + " " + slps[i].slpUtxoJudgementAmount["c"][0] + "<br/>";
-        let amount = (slps[i].slpUtxoJudgementAmount["c"][0] / Math.pow(10, tokenInfo.decimals));
-        utxoCheckboxes = utxoCheckboxes + "<input type='checkbox' name='token' value='" + slps[i].txid + "," + slps[i].vout + "," + slps[i].satoshis + "'>" + amount + " " + tokenInfo.symbol + "</input><br/>";
+      try {
+        const tokenInfo = await bitboxNetwork.getTokenInformation(keysafe);
+        let slps = slputxos[keysafe];
+        utxoCheckboxes = utxoCheckboxes +
+          "<br/>" + ds(tokenInfo.name) + " " + ds(tokenInfo.documentUri) + " <a target='memotokeninfo' href='https://memo.cash/token/" + keysafe + "?sales'>Recent Sales On Memo</a><br/>";
+
+        for (let i = 0; i < slps.length; i++) {
+          //utxoCheckboxes = utxoCheckboxes + tokenInfo.name + " " + slps[i].satoshis + " " + slps[i].txid + " " + slps[i].vout + " " + slps[i].satoshis + " " + slps[i].slpUtxoJudgementAmount["c"][0] + "<br/>";
+          let amount = (Number(slps[i].slpUtxoJudgementAmount["c"][0]) / Math.pow(10, Number(tokenInfo.decimals)));
+          utxoCheckboxes = utxoCheckboxes + "<input type='checkbox' name='token' value='" + sanitizeAlphanumeric(slps[i].txid) + "," + Number(slps[i].vout) + "," + Number(slps[i].satoshis) + "'>" + amount + " " + ds(tokenInfo.symbol) + "</input><br/>";
+          document.getElementById("checkboxes").innerHTML = utxoCheckboxes;
+        }
+      } catch (err) {
+        console.log(err);
+        utxoCheckboxes = utxoCheckboxes + "Error loading these tokens:" + err;
         document.getElementById("checkboxes").innerHTML = utxoCheckboxes;
+        //Error proccessing this token, move on
+        
       }
     }
 
     utxoCheckboxes = utxoCheckboxes + "</form><br/><br/>";
     document.getElementById("checkboxes").innerHTML = utxoCheckboxes;
-
-
     document.getElementById("private").style.display = "block";
-
-
-    document.getElementById("lookup").disabled = false;
     document.getElementById("lookup").innerHTML = "Lookup";
   })();
 
@@ -51,16 +66,33 @@ function recycle(checkedBoxes) {
 
   var checkedBoxes = document.querySelectorAll('input[name="token"]:checked');
 
-  let pubkey = document.getElementById("publickey").value;
-  let privkey = document.getElementById("privatekey").value;
+  if (checkedBoxes.length < 1) {
+    alert("Oops. No tokens selected. You must select 2 or more tokens to recycle.");
+    return;
+  }
 
-  let tx = constructTransaction(checkedBoxes, 0, pubkey, privkey);
-  let transactionSize = tx.byteLength();
-  //Add 5 extra satoshis for safety
-  let fees = transactionSize + 5;
+  if (checkedBoxes.length == 1) {
+    alert("Oops. You must select 2 or more tokens to recycle.");
+    return;
+  }
 
-  //Make the trx again, with fees included
-  tx = constructTransaction(checkedBoxes, fees, pubkey, privkey);
+  let pubkey = document.getElementById("publickey").value.trim();  
+  let privkey = document.getElementById("privatekey").value.trim();
+
+  let tx;
+  try {
+    tx = constructTransaction(checkedBoxes, 0, pubkey, privkey);
+    let transactionSize = tx.byteLength();
+    //Add 5 extra satoshis for safety
+    let fees = transactionSize + 5;
+
+    //Make the trx again, with fees included
+    tx = constructTransaction(checkedBoxes, fees, pubkey, privkey);
+
+  } catch (err) {
+    alert("Oops. Error constructing transaction. You sure your privkey is valid and matches your pubkey? " + err);
+  }
+
 
   //BROADCAST THE TRANSACTION
   let hex = tx.toHex();
@@ -69,11 +101,13 @@ function recycle(checkedBoxes) {
   const RawTransactions = BITBOX.RawTransactions;
   //let rawtransactions = new RawTransactions();
   RawTransactions.sendRawTransaction(hex).then((result) => {
+    document.getElementById("successtrxid").innerHTML = "<a target='blockchair' href='https://blockchair.com/bitcoin-cash/transaction/" + sanitizeAlphanumeric(result) + "'> Blockchair " + sanitizeAlphanumeric(result) + "</a>";
+    document.getElementById("private").style.display = "none";
+    alert("Success! trxid:" + result);
     console.log(result);
-    alert("trxid:"+result);
   }, (err) => {
     console.log(result);
-    alert("Error:"+result);
+    alert("Error Broadcasting Transaction:" + result);
   });
 
 }
@@ -82,7 +116,7 @@ function constructTransaction(checkedBoxes, transactionFee, publicAddress, priva
 
   //const ECPair = BITBOX.ECPair;
   let keyPair = BITBOX.ECPair.fromWIF(privateKey);
-  
+
 
   const TransactionBuilder = BITBOX.TransactionBuilder;
   let transactionBuilder = new TransactionBuilder();
@@ -113,4 +147,25 @@ function constructTransaction(checkedBoxes, transactionFee, publicAddress, priva
   let tx = transactionBuilder.build();
   return tx;
 
+}
+
+function ds(input) {
+  //if (input === undefined) { return ""; };
+  try {
+    //If this error out 'input.replace not a number' probably input is not a string type
+    input = input.replace(/&/g, '&amp;');
+    input = input.replace(/</g, '&lt;');
+    input = input.replace(/>/g, '&gt;');
+    input = input.replace(/"/g, '&quot;');
+    input = input.replace(/'/g, '&#x27;');
+  } catch (e) {
+    //Anything funky goes on, we'll return safe empty string
+    return "";
+  }
+  return input;
+}
+
+function sanitizeAlphanumeric(input) {
+  if (input == null) { return ""; }
+  return input.replace(/[^A-Za-z0-9]/g, '');
 }
