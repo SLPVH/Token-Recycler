@@ -31,13 +31,15 @@ function lookupTokens() {
 
     for (var key in slputxos) {
       let keysafe=sanitizeAlphanumeric(key);
-      document.getElementById("lookup").innerHTML = "Lookup " + keysafe;
+      document.getElementById("lookup").innerHTML = "Lookup " + keysafe.substring(0,10)+"...";
 
       try {
+        //To stay within Bitbox usage limits
+        sleep(1000);
         const tokenInfo = await bitboxNetwork.getTokenInformation(keysafe);
         let slps = slputxos[keysafe];
         utxoCheckboxes = utxoCheckboxes +
-          "<br/>" + ds(tokenInfo.name) + " " + ds(tokenInfo.documentUri) + " <a target='memotokeninfo' href='https://memo.cash/token/" + keysafe + "?sales'>Recent Sales On Memo</a><br/>";
+          "<br/><b>" + ds(tokenInfo.name) + "</b><br/> (" + ds(tokenInfo.documentUri) + ") | <a target='memotokeninfo' href='https://memo.cash/token/" + keysafe + "?sales'>Recent Sales On Memo</a><br/>";
 
         for (let i = 0; i < slps.length; i++) {
           //utxoCheckboxes = utxoCheckboxes + tokenInfo.name + " " + slps[i].satoshis + " " + slps[i].txid + " " + slps[i].vout + " " + slps[i].satoshis + " " + slps[i].slpUtxoJudgementAmount["c"][0] + "<br/>";
@@ -168,4 +170,8 @@ function ds(input) {
 function sanitizeAlphanumeric(input) {
   if (input == null) { return ""; }
   return input.replace(/[^A-Za-z0-9]/g, '');
+}
+
+function sleep(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
 }

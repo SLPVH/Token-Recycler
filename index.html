@@ -1,55 +1,112 @@
-<!doctype html>
-<html>
+<!-- 
+//////////////////////////////////////////////////////
+
+FREE HTML5 TEMPLATE 
+DESIGNED & DEVELOPED by FREEHTML5.CO
+
+//////////////////////////////////////////////////////
+ -->
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Token Recycler</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>SLP Token Recycler</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="SLP Token Recycler" />
+	<meta name="keywords" content="SLP Token Recycler" />
+	<meta name="author" content="FreeTrade" />
+
+	<!-- Facebook and Twitter integration -->
+	<meta property="og:title" content="SLP Token Recycler" />
+	<meta property="og:image" content="" />
+	<meta property="og:url" content="" />
+	<meta property="og:site_name" content="SLP Token Recycler" />
+	<meta property="og:description" content="SLP Token Recycler" />
+	<meta name="twitter:title" content="SLP Token Recycler" />
+	<meta name="twitter:image" content="" />
+	<meta name="twitter:url" content="" />
+	<meta name="twitter:card" content="" />
+
+	
+	<!-- Google Webfont -->
+	<link href='http://fonts.googleapis.com/css?family=Lato:400,300,700|Unica+One' rel='stylesheet' type='text/css'>
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="css/bootstrap.css">
+
+	<!-- Theme Style -->
+	<link rel="stylesheet" href="css/style.css">
+
+
+	<!-- FOR IE9 below -->
+	<!--[if lt IE 9]>
+	<script src="js/modernizr-2.6.2.min.js"></script>
+	<script src="js/respond.min.js"></script>
+	<![endif]-->
+
 </head>
 
 <body>
-    <script src='js/bitboxsdk.js'></script>
-    <script src='js/slpjs.js'></script>
-    <script src='js/tokenrecycler.js'></script>
 
-    <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
-    <h1>Token Recycler</h1>
-    <br />
-        <b>This tool is in beta. It may not be safe to use and is recommended for advanced users only.</b>
-        <br/>
-        <br/>
-        This tool allows you to recycle the BCH utxos and funds that are used to store unwanted tokens.
-        <br/>
-        <br/>
-        There are a variety of reasons you may wish to recycle tokens. You may wish to remove them from your Member account to speed up transactions, or from your Memo account to declutter your profile and interface.
-        <br/>
-        <br/>
-        This tool will destroy unwanted tokens, so be careful with its use. There is no way to recover tokens once recycled, and the amount of BCH gained from recyling is relatively small.
-        <br/>
-        <br/>
-        <b>USE OF THIS TOOL IS ENTIRELY AT YOUR OWN RISK.</b>
-        <br/>
-        <br/>
-        <br/>
-    <!--Private Key:<br /><input size="100" id="privatekey" /><br />
-    OR-->
-    Public Key: (Begins with 'simpleledger' or 'q' or '1' or '3')<br />
-    <input size="100" value="qpw85glpf2qkv6lve52xkpekw2jq0pdcuyxzx87rzz" id="publickey" />
-    <button id="lookup" onclick="lookupTokens();">Lookup SLP Tokens</button>
-    <div id="checkboxes"></div>
+	<script src='js/bitboxsdk.js'></script>
+	<script src='js/slpjs.js'></script>
+	<script src='js/tokenrecycler.js'></script>
 
-    <div id="private" style="display:none">
-        WIF Compressed Private Key: (Begins with L or K)<br />
-        <input size="100" value="" id="privatekey" />
-        <button id="recycle" onclick="recycle();">Recycle Checked Tokens</button>
-    </div>
-    <br/><br/>
-    <div id="successtrxid"></div>
-    <br/><br/>
+	<!--[if lte IE 9]>
+				<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+			<![endif]-->
+	<div class="container">
+		<div class="fh5co-page-title text-center">
+			<h1 class="fh5co-title">Token Recycler</h1>
+			<h2 class="fh5co-title-sub"><br />
+				<b>This tool is in beta. It may not be safe to use and is recommended for advanced users only.</b>
+				<br />
+				<br />
+				This tool allows you to recycle the BCH utxos and funds that are used to store unwanted tokens.
+				<br />
+				<br />
+				There are a variety of reasons you may wish to recycle tokens. You may wish to remove them from your
+				Member account to speed up transactions, or from your Memo account to declutter your profile and
+				interface.
+				<br />
+				<br />
+				This tool will destroy unwanted tokens, so be careful with its use. There is no way to recover tokens
+				once recycled, and the amount of BCH gained from recyling is relatively small.
+				<br />
+				<br />
+				<b>USE OF THIS TOOL IS ENTIRELY AT YOUR OWN RISK.</b>
+				<br />
+				<br />
+				<br /></h2>
+		</div>
+
+		<!--Private Key:<br /><input size="100" id="privatekey" /><br />
+		OR-->
+		Public Key: (Begins with 'simpleledger' or 'q' or '1' or '3')<br />
+		<input size="50" value="qpw85glpf2qkv6lve52xkpekw2jq0pdcuyxzx87rzz" id="publickey" />
+		<button id="lookup" onclick="lookupTokens();">Lookup SLP Tokens</button>
+		<div id="checkboxes"></div>
+
+		<div id="private" style="display:none">
+			WIF Compressed Private Key: (Begins with L or K)<br />
+			<input size="70" value="" id="privatekey" />
+			<button id="recycle" onclick="recycle();">Recycle Checked Tokens</button>
+		</div>
+		<br /><br />
+		<div id="successtrxid"></div>
+		<br /><br />
+
+	</div>
+
+
 </body>
 
 </html>
