@@ -39,7 +39,7 @@ function lookupTokens() {
         const tokenInfo = await bitboxNetwork.getTokenInformation(keysafe);
         let slps = slputxos[keysafe];
         utxoCheckboxes = utxoCheckboxes +
-          "<br/><b>" + ds(tokenInfo.name) + "</b><br/> (" + ds(tokenInfo.documentUri) + ") | <a target='memotokeninfo' href='https://memo.cash/token/" + keysafe + "?sales'>Recent Sales On Memo</a><br/>";
+          "<br/><b>" + ds(tokenInfo.name) + "</b><br/> (" + ds(tokenInfo.documentUri) + ") | <a rel='noopener noreferrer' target='memotokeninfo' href='https://memo.cash/token/" + keysafe + "?sales'>Recent Sales On Memo</a><br/>";
 
         for (let i = 0; i < slps.length; i++) {
           //utxoCheckboxes = utxoCheckboxes + tokenInfo.name + " " + slps[i].satoshis + " " + slps[i].txid + " " + slps[i].vout + " " + slps[i].satoshis + " " + slps[i].slpUtxoJudgementAmount["c"][0] + "<br/>";
@@ -108,8 +108,9 @@ function recycle(checkedBoxes) {
     alert("Success! trxid:" + result);
     console.log(result);
   }, (err) => {
-    console.log(result);
-    alert("Error Broadcasting Transaction:" + result);
+    alert("Error Broadcasting Transaction:" + err);
+    console.log(err);
+    console.log(err.message);
   });
 
 }
