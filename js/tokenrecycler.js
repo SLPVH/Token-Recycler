@@ -39,7 +39,7 @@ function lookupTokens() {
         const tokenInfo = await bitboxNetwork.getTokenInformation(keysafe);
         let slps = slputxos[keysafe];
         utxoCheckboxes = utxoCheckboxes +
-          "<br/><b>" + ds(tokenInfo.name) + "</b><br/> (" + ds(tokenInfo.documentUri) + ") | <a rel='noopener noreferrer' target='memotokeninfo' href='https://memo.cash/token/" + keysafe + "?sales'>Recent Sales On Memo</a><br/>";
+          "<br/><b>" + ds(tokenInfo.name) + "</b><br/> (" + ds(tokenInfo.documentUri) + ") | <a rel='noopener noreferrer' target='memberdiscussion' href='https://memberapp.github.io/#thread?post=" + keysafe + "'>Member Discussion</a> | <a rel='noopener noreferrer' target='memotokeninfo' href='https://memo.cash/token/" + keysafe + "?sales'>Recent Sales On Memo</a><br/>";
 
         for (let i = 0; i < slps.length; i++) {
           //utxoCheckboxes = utxoCheckboxes + tokenInfo.name + " " + slps[i].satoshis + " " + slps[i].txid + " " + slps[i].vout + " " + slps[i].satoshis + " " + slps[i].slpUtxoJudgementAmount["c"][0] + "<br/>";
